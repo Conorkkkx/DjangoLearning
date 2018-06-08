@@ -11,10 +11,10 @@ def index(request):
         article_list = Article.objects.all()
     context = {}
     context['article_list'] = article_list
-    index_page = render(request, 'first_web_2.html', context)
+    index_page = render(request, 'index.html', context)
     return index_page
 
-def detail(request):
+def detail(request,page_num):
     if request.method == 'GET':
         form = CommentForm
     if request.method == 'POST':
@@ -26,7 +26,11 @@ def detail(request):
             c.save()
             return redirect(to='detail')
     context = {}
-    comment_list = Comment.objects.all()
-    context['comment_list'] = comment_list
+    a = Article.objects.get(id=page_num)
+    best_comment = Comment.objects.filter(best_comment=True, belong_to=a)
+    if best_comment:
+        context['best_comment'] = best_comment[0]
+    article = Article.objects.get(id=page_num)
+    context['article'] = article
     context['form'] = form
     return render(request,'detail.html',context)

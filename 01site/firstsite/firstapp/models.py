@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class People(models.Model):
     def __str__(self):
         return self.name
@@ -20,6 +19,9 @@ class Article(models.Model):
 
 class Comment(models.Model):
     name = models.CharField(null=True, blank=True, max_length=50)
-    comment = models.TextField(null=True, blank=True)
+    comment = models.TextField()
+    createtime = models.DateField(auto_now=True)
+    belong_to = models.ForeignKey(to=Article, related_name='under_comments', null=True, blank=True, on_delete=models.CASCADE)
+    best_comment = models.BooleanField(default=False)
     def __str__(self):
-        return self.comment
+        return self.name
